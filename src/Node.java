@@ -30,6 +30,7 @@ public class Node implements Comparable<Node>{
 
     public void adjustWeights(double learningRate){
             this.bWeight = this.bWeight + (this.errSig*learningRate);
+            System.out.print(bWeight);
             for(int i = 0; i<this.linkVals.length;i++){ //loops through links
                 double weight = this.errSig * this.linkVals[i]*learningRate;//linkVal holds the result off the provious neuron
                 this.linkWeights[i] += weight; //adjusts link weights

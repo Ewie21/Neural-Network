@@ -6,9 +6,17 @@
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "src.Main",
+            "projectName": "Neural-Network_3c077e75"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "src.Main",
             "projectName": "neural-network_bd970052",
             "vmArgs": "-ea"
-        },         {
+        },
+        {
             "type": "java",
             "name": "Launch Current File",
             "request": "launch",
