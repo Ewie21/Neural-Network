@@ -6,6 +6,13 @@
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "src.Main",
+            "projectName": "neural-network_9cf64a85"
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "src.Main",
             "projectName": "Neural-Network_3c077e75"
         },
         {

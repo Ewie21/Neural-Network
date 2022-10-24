@@ -2,7 +2,7 @@ package src;
 import java.lang.Comparable;
 
 public class Node implements Comparable<Node>{
-    double bWeight = .5;
+    double bWeight = 1;
     //weights
     double[] linkWeights = new double[2];
     //values
@@ -16,6 +16,7 @@ public class Node implements Comparable<Node>{
         for(int i = 0; i<this.linkVals.length;i++){
             sum += (this.linkVals[i]*this.linkWeights[i]);
         }
+        //System.out.print(sum+bWeight);
         return sum+bWeight;
     }
 
@@ -29,17 +30,23 @@ public class Node implements Comparable<Node>{
     }
 
     public void adjustWeights(double learningRate){
-            this.bWeight = this.bWeight + (this.errSig*learningRate);
-            System.out.print(bWeight);
+            this.bWeight += this.errSig*learningRate;
             for(int i = 0; i<this.linkVals.length;i++){ //loops through links
-                double weight = this.errSig * this.linkVals[i]*learningRate;//linkVal holds the result off the provious neuron
-                this.linkWeights[i] += weight; //adjusts link weights
+                //System.out.println("\nweight\n");
+                //System.out.print(linkWeights[i]);
+                //System.out.printf("\n val: %f \n", linkVals[i]);
+
+                double weight = this.linkWeights[i] + (this.errSig * this.linkVals[i] * learningRate);//this is equal to 0 for some reason
+                //System.out.println("\n Err: ");
+                //System.out.print(errSig);
+                this.linkWeights[i] = weight; //adjusts link weights
+                //System.out.println("weight: \n");
+                //System.out.print(linkWeights[i]);
             }
     }
 
-
     public double sigmoid(double x){
-        return 1.0/(1.0+Math.pow(Math.E, -1*x));
+        return 1.0/(1.0+Math.pow(Math.E, -x));
     }
 
     @Override public int compareTo(Node node){
