@@ -1,19 +1,27 @@
 package src;
 import java.lang.Comparable;
 
-public class Node implements Comparable<Node>{
-    double bWeight = 1;
+public class Node{
+    double bWeight;
     //weights
-    double[] linkWeights = new double[2];
+    int links;
+    double[] linkWeights;
     //values
-    double[] linkVals = new double[2];
-    double errSig = 1;
+    double[] linkVals;
+    double errSig;
     String category;
     double correctAnswer;
-    int sum = 0;
+    double cachedOutput;
+
+    public Node(int links){
+        this.links = links;
+        linkWeights = new double[links];
+        linkVals = new double[links];
+    }
 
     public double input(){
-        for(int i = 0; i<this.linkVals.length;i++){
+        double sum = 0;
+        for(int i = 0; i<links;i++){
             sum += (this.linkVals[i]*this.linkWeights[i]);
         }
         //System.out.print(sum+bWeight);
@@ -21,45 +29,34 @@ public class Node implements Comparable<Node>{
     }
 
     public double output(){
-        return sigmoid(input());
+        cachedOutput = sigmoid(input());
+        return cachedOutput;
     } 
 
     public void computeAnswerErrSignal(){
-        double actualAnswer = this.output();
+        double actualAnswer = this.cachedOutput;
         this.errSig = (this.correctAnswer - actualAnswer)*(actualAnswer)*(1-actualAnswer);
     }
 
     public void adjustWeights(double learningRate){
             this.bWeight += this.errSig*learningRate;
-            for(int i = 0; i<this.linkVals.length;i++){ //loops through links
+            for(int link = 0; link<links;link++){ //loops through links
                 //System.out.println("\nweight\n");
                 //System.out.print(linkWeights[i]);
                 //System.out.printf("\n val: %f \n", linkVals[i]);
-
-                double weight = this.linkWeights[i] + (this.errSig * this.linkVals[i] * learningRate);//this is equal to 0 for some reason
+                double weight = this.errSig * this.linkVals[link] * learningRate;//this is equal to 0 for some reason
                 //System.out.println("\n Err: ");
                 //System.out.print(errSig);
-                this.linkWeights[i] = weight; //adjusts link weights
+                this.linkWeights[link] += weight; //adjusts link weights
                 //System.out.println("weight: \n");
                 //System.out.print(linkWeights[i]);
             }
     }
 
     public double sigmoid(double x){
-        return 1.0/(1.0+Math.pow(Math.E, -x));
+        return 1.0/(1.0+Math.exp(-x));
     }
 
-    @Override public int compareTo(Node node){
-       double output = this.output();
-       double oOutput = node.output();
-        if(output == oOutput){
-            return 0;
-        }else if(output<oOutput){
-            return 1;
-        }else{
-            return -1;
-        }
-    }
 
     public double getbWeight() {
         return bWeight;

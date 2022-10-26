@@ -1,9 +1,9 @@
 package src;
 import java.util.*;
 public class Input {
-    ArrayList<Integer> inputs;
-    double answer;
-    public Input(ArrayList<Integer> inputs, Double answer){
+    ArrayList<Double> inputs;
+    String answer;
+    public Input(ArrayList<Double> inputs, String answer){
         this.inputs = inputs;
         this.answer = answer;
     }
