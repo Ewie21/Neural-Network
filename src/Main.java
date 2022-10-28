@@ -1,5 +1,4 @@
 package src;
-import java.lang.reflect.Array;
 import java.util.*;
 import SimpleFile.SimpleFile;
 //ErrSig is still 0, fix this!!!
