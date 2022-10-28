@@ -76,7 +76,7 @@ public class NeuralNetwork{
                 }
                 
                 Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
-                double brightness = brightestNode.cachedOutput; //answer the network is giving us
+                double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
                 backPropogate(nodeArray, learningRate, hiddenLayers);
                 if(epochs % 10 == 0){
                     System.out.println("\n-------------------------\n");
@@ -109,12 +109,12 @@ public class NeuralNetwork{
 
     public static int largestNode(ArrayList<Node>[] nodeArray){
         int largestNode = 0;
-                for(int node = 0; node<nodeArray[ANSWER].size();node++){
-                    if(nodeArray[2].get(node).cachedOutput>nodeArray[2].get(largestNode).cachedOutput){
-                        largestNode = node;
-                    }
-                }
-                return largestNode;
+        for(int node = 0; node<nodeArray[ANSWER].size();node++){
+            if(nodeArray[ANSWER].get(node).cachedOutput>nodeArray[ANSWER].get(largestNode).cachedOutput){
+                largestNode = node;
+            }
+        }
+        return largestNode;
     }
 
 
