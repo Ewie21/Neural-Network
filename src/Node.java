@@ -1,5 +1,4 @@
 package src;
-import java.lang.Comparable;
 
 public class Node{
     double bWeight;
@@ -24,7 +23,6 @@ public class Node{
         for(int i = 0; i<links;i++){
             sum += (this.linkVals[i]*this.linkWeights[i]);
         }
-        //System.out.print(sum+bWeight);
         return sum+bWeight;
     }
 
@@ -34,51 +32,28 @@ public class Node{
     } 
 
     public void computeAnswerErrSignal(){
-        double actualAnswer = this.cachedOutput;
+        //System.out.println(errSig);
+        double actualAnswer = cachedOutput;
         this.errSig = (this.correctAnswer - actualAnswer)*(actualAnswer)*(1-actualAnswer);
+        //System.out.println(errSig);
     }
-
+    
     public void adjustWeights(double learningRate){
             this.bWeight += this.errSig*learningRate;
             for(int link = 0; link<links;link++){ //loops through links
                 //System.out.println("\nweight\n");
-                //System.out.print(linkWeights[i]);
-                //System.out.printf("\n val: %f \n", linkVals[i]);
+                //System.out.println(linkWeights[link]);
+                //System.out.printf("\n val: %f \n", linkVals[link]);
                 double weight = this.errSig * this.linkVals[link] * learningRate;//this is equal to 0 for some reason
                 //System.out.println("\n Err: ");
-                //System.out.print(errSig);
-                this.linkWeights[link] += weight; //adjusts link weights
+                //System.out.println(errSig);
+                    this.linkWeights[link] += weight; //adjusts link weights
                 //System.out.println("weight: \n");
-                //System.out.print(linkWeights[i]);
+                //System.out.println(linkWeights[link]);
             }
     }
 
     public double sigmoid(double x){
         return 1.0/(1.0+Math.exp(-x));
-    }
-
-
-    public double getbWeight() {
-        return bWeight;
-    }
-
-    public double[] getLinkWeights() {
-        return linkWeights;
-    }
-
-    public double[] getLinkVals() {
-        return linkVals;
-    }
-
-    public double getErrSig() {
-        return errSig;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public double getCorrectAnswer() {
-        return correctAnswer;
     }
 }
