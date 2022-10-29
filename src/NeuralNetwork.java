@@ -39,7 +39,7 @@ public class NeuralNetwork{
         }
     }
 
-    public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate, int hiddenLayers){ //put this in neural net class!!!!!!!!1!!!!!!
+    public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate, int hiddenLayers){
         int epochs = 0;
         double sum = 0;
         int n = 0;
@@ -60,7 +60,7 @@ public class NeuralNetwork{
                 //passes in data for input layer
                 for(int i = 0; i<nodeArray[INPUT].size(); i++){//i = current input index
                     double input = data.get(l).inputs.get(i);
-                    ((Sensor) nodeArray[INPUT].get(i)).setValue(input);
+                    ((Sensor) nodeArray[INPUT].get(i)).setValue(input); 
                 }
                 //feed-forward values for hidden and output layers
                 for(int layer = 1; layer<nodeArray.length; layer++){ //height of the array
@@ -94,13 +94,14 @@ public class NeuralNetwork{
 
     public static void adjustHiddenWeights(ArrayList<Node>[] nodeArray, double learningRate, int hiddenLayers){
         //errsig and adjusting weights for hidden neurons
-        for(int HIDDEN = 1; HIDDEN < hiddenLayers;HIDDEN++)
+        for(int HIDDEN = 1; HIDDEN < hiddenLayers+1;HIDDEN++)
             for(int hidden = 0; hidden<nodeArray[HIDDEN].size();hidden++){ 
-                nodeArray[HIDDEN].get(hidden).errSig = 0;
+                nodeArray[HIDDEN].get(hidden).errSig = 0;//clears errSig from last training example
                 for(int answer = 0; answer<nodeArray[ANSWER].size(); answer++){ //loops through answer neurons
-                    double answerWeight = nodeArray[ANSWER].get(hidden).linkWeights[hidden];
-                    nodeArray[HIDDEN].get(hidden).errSig += nodeArray[ANSWER].get(hidden).errSig * answerWeight; //errSig initial summation for hidden nodeArray
-                }   
+                    //Initially nodeArray[ANSWEr].get[hidden], changing it to this changed nothing
+                    double answerWeight = nodeArray[ANSWER].get(answer).linkWeights[hidden];
+                    nodeArray[HIDDEN].get(hidden).errSig += nodeArray[ANSWER].get(answer).errSig * answerWeight; //errSig initial summation for hidden nodeArray
+                }
                 double hiddenResult = nodeArray[HIDDEN].get(hidden).cachedOutput;
                 nodeArray[HIDDEN].get(hidden).errSig *= (hiddenResult)*(1-hiddenResult);
                 nodeArray[HIDDEN].get(hidden).adjustWeights(learningRate);
@@ -124,7 +125,7 @@ public class NeuralNetwork{
             nodeArray[ANSWER].get(answer).computeAnswerErrSignal();//errSig for answer neurons 
         }
         adjustHiddenWeights(nodeArray, learningRate, 1);
-        //adjusting weights for hidden neurons
+        //adjust weight for answer neurons
         for(int answer = 0; answer<nodeArray[ANSWER].size(); answer++){
             nodeArray[ANSWER].get(answer).adjustWeights(learningRate);
         }

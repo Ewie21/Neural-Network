@@ -47,7 +47,7 @@ public class Node{
                 double weight = this.errSig * this.linkVals[link] * learningRate;//this is equal to 0 for some reason
                 //System.out.println("\n Err: ");
                 //System.out.println(errSig);
-                    this.linkWeights[link] += weight; //adjusts link weights
+                this.linkWeights[link] += weight; //adjusts link weights
                 //System.out.println("weight: \n");
                 //System.out.println(linkWeights[link]);
             }
