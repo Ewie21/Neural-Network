@@ -1,7 +1,6 @@
 package src;
 import java.util.*;
 import SimpleFile.SimpleFile;
-//ErrSig is still 0, fix this!!!
 
 public class Main{  
     final static Myrandom random = new Myrandom();
