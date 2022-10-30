@@ -1,7 +1,6 @@
 package src;
 import java.util.*;
 
-
 public class NeuralNetwork{
     public static ArrayList<Node>[] nodeArray;
     public static int INPUT;
@@ -17,7 +16,7 @@ public class NeuralNetwork{
         }
         //create sensors
         for(int i = 0; i<inputNum; i++){
-            nodeArray[0].add(new Sensor());
+            nodeArray[INPUT].add(new Sensor());
         }
         //create hidden layers
         for(int n = 1; n<hiddenLayers+1;n++){ //creates hidden layers
@@ -42,11 +41,9 @@ public class NeuralNetwork{
     public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate, int hiddenLayers){
         int epochs = 0;
         double sum = 0;
-        int n = 0;
         for(int i = 0; i<categories.length; i++){
             nodeArray[ANSWER].get(i).category = categories[i];
         }
-        double averageErr = sum/n;
         while(epochs<100){ //read file in another function
             for(int l = 0; l<data.size(); l++){ //iterates through training examples
                 //assigns correct answers to answer nodeArray based on their category
@@ -77,15 +74,17 @@ public class NeuralNetwork{
                 
                 Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
                 double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
-                backPropogate(nodeArray, learningRate, hiddenLayers);
+                sum+=brightestNode.errSig;
                 if(epochs % 10 == 0){
                     System.out.println("\n-------------------------\n");
                     System.out.printf("Epoch: %d\n", epochs);
+                    System.out.printf("Non-Category: %s \nnon-Brightness: %f\n", nodeArray[ANSWER].get(1-largestNode(nodeArray)).category, nodeArray[ANSWER].get(1-largestNode(nodeArray)).cachedOutput);
                     System.out.printf("Category: %s \nBrightness: %f\n", brightestNode.category, brightness);
                     if(brightestNode.category.equals(data.get(l).answer)){
                         System.out.println("Yay ");
                     }
                 }
+                backPropogate(nodeArray, learningRate, hiddenLayers);
             }
             epochs++;
         }
