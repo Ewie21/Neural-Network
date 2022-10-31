@@ -40,11 +40,14 @@ public class NeuralNetwork{
 
     public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate, int hiddenLayers){
         int epochs = 0;
+        double errSum = 0;
         //assigns categories to answer nodes
         for(int i = 0; i<categories.length; i++){
             nodeArray[ANSWER].get(i).category = categories[i];
         }
         while(epochs<100){ //read file in another function
+            errSum = 0;
+            int count = 0;
             for(int l = 0; l<data.size(); l++){ //iterates through training examples
                 //assigns correct answers to answer nodes based on their category
                 for(int i = 0; i<nodeArray[ANSWER].size();i++){
@@ -65,8 +68,8 @@ public class NeuralNetwork{
                         for(int prevNode = 0; prevNode<nodeArray[layer-1].size(); prevNode++){ //previous layer
                             nodeArray[layer].get(node).linkVals[prevNode] = nodeArray[layer - 1].get(prevNode).cachedOutput;
                             nodeArray[layer].get(node).output();
-                            //if(layer == 2){
-                            //    System.out.printf("ran output on answer %f\n", nodeArray[layer][node].cachedOutput);
+                            //if(layer == ANSWER){
+                            //    System.out.printf("ran output on answer %f\n", nodeArray[layer].get(node).cachedOutput);
                             //}
                         }
                     }
@@ -83,16 +86,19 @@ public class NeuralNetwork{
                         System.out.println("Yay ");
                     }
                 }
+                errSum += brightestNode.errSig;
+                count++;
                 backPropogate(nodeArray, learningRate, hiddenLayers);
             }
+            errSum/=count;
             epochs++;
         }
-        System.out.printf("finished with an errsig of %f after %d epochs \n", nodeArray[ANSWER].get(largestNode(nodeArray)).errSig, epochs);
+        System.out.printf("finished with an errsig of %f after %d epochs \n", errSum, epochs);
     }
 
     public static void adjustHiddenWeights(ArrayList<Node>[] nodeArray, double learningRate, int hiddenLayers){
         //errsig and adjusting weights for hidden neurons
-        for(int HIDDEN = 1; HIDDEN < hiddenLayers+1;HIDDEN++)
+        for(int HIDDEN = 1; HIDDEN < hiddenLayers+1;HIDDEN++){
             for(int hidden = 0; hidden<nodeArray[HIDDEN].size();hidden++){ 
                 nodeArray[HIDDEN].get(hidden).errSig = 0;//clears errSig from last training example
                 for(int answer = 0; answer<nodeArray[ANSWER].size(); answer++){ //loops through answer neurons
@@ -104,6 +110,7 @@ public class NeuralNetwork{
                 nodeArray[HIDDEN].get(hidden).errSig *= (hiddenResult)*(1-hiddenResult);
                 nodeArray[HIDDEN].get(hidden).adjustWeights(learningRate);
             }
+        }
     }
 
     public static int largestNode(ArrayList<Node>[] nodeArray){

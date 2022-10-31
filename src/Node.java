@@ -36,7 +36,7 @@ public class Node{
         this.errSig = (this.correctAnswer - cachedOutput)*(cachedOutput)*(1-cachedOutput);
         //System.out.println(errSig);
     }
-    
+
     public void adjustWeights(double learningRate){
             this.bWeight += this.errSig*learningRate;
             for(int link = 0; link<links;link++){ //loops through links
@@ -45,7 +45,7 @@ public class Node{
                 //System.out.printf("\n val: %f \n", linkVals[link]);
                 //System.out.println("\n Err: ");
                 //System.out.println(errSig);
-                this.linkWeights[link] += this.errSig * this.linkVals[link] * learningRate;; //adjusts link weights
+                this.linkWeights[link] += (this.errSig * this.linkVals[link] * learningRate);; //adjusts link weights
                 //System.out.println("weight: \n");
                 //System.out.println(linkWeights[link]);
             }
