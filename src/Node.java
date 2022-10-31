@@ -33,8 +33,7 @@ public class Node{
 
     public void computeAnswerErrSignal(){
         //System.out.println(errSig);
-        double actualAnswer = cachedOutput;
-        this.errSig = (this.correctAnswer - actualAnswer)*(actualAnswer)*(1-actualAnswer);
+        this.errSig = (this.correctAnswer - cachedOutput)*(cachedOutput)*(1-cachedOutput);
         //System.out.println(errSig);
     }
     
@@ -44,10 +43,9 @@ public class Node{
                 //System.out.println("\nweight\n");
                 //System.out.println(linkWeights[link]);
                 //System.out.printf("\n val: %f \n", linkVals[link]);
-                double weight = this.errSig * this.linkVals[link] * learningRate;//this is equal to 0 for some reason
                 //System.out.println("\n Err: ");
                 //System.out.println(errSig);
-                this.linkWeights[link] += weight; //adjusts link weights
+                this.linkWeights[link] += this.errSig * this.linkVals[link] * learningRate;; //adjusts link weights
                 //System.out.println("weight: \n");
                 //System.out.println(linkWeights[link]);
             }

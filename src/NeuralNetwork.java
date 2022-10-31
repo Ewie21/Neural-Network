@@ -40,13 +40,13 @@ public class NeuralNetwork{
 
     public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate, int hiddenLayers){
         int epochs = 0;
-        double sum = 0;
+        //assigns categories to answer nodes
         for(int i = 0; i<categories.length; i++){
             nodeArray[ANSWER].get(i).category = categories[i];
         }
         while(epochs<100){ //read file in another function
             for(int l = 0; l<data.size(); l++){ //iterates through training examples
-                //assigns correct answers to answer nodeArray based on their category
+                //assigns correct answers to answer nodes based on their category
                 for(int i = 0; i<nodeArray[ANSWER].size();i++){
                     if(nodeArray[ANSWER].get(i).category.equals(categories[i])){
                         nodeArray[ANSWER].get(i).correctAnswer = 1;
@@ -74,7 +74,6 @@ public class NeuralNetwork{
                 
                 Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
                 double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
-                sum+=brightestNode.errSig;
                 if(epochs % 10 == 0){
                     System.out.println("\n-------------------------\n");
                     System.out.printf("Epoch: %d\n", epochs);
@@ -97,7 +96,7 @@ public class NeuralNetwork{
             for(int hidden = 0; hidden<nodeArray[HIDDEN].size();hidden++){ 
                 nodeArray[HIDDEN].get(hidden).errSig = 0;//clears errSig from last training example
                 for(int answer = 0; answer<nodeArray[ANSWER].size(); answer++){ //loops through answer neurons
-                    //Initially nodeArray[ANSWEr].get[hidden], changing it to this changed nothing
+                    //Initially nodeArray[ANSWER].get[hidden], changing it to this changed nothing
                     double answerWeight = nodeArray[ANSWER].get(answer).linkWeights[hidden];
                     nodeArray[HIDDEN].get(hidden).errSig += nodeArray[ANSWER].get(answer).errSig * answerWeight; //errSig initial summation for hidden nodeArray
                 }

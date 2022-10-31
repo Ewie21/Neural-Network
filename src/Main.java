@@ -1,6 +1,12 @@
 package src;
 import java.util.*;
+
+import org.junit.Test;
+
 import SimpleFile.SimpleFile;
+//THE ISSUE IS THAT THE BRIGHTNESS IS NEVER GOING DOWN, ONLY UP
+//THERE AREN'T ANY NEGATIVE WEIGHTS EVEN THOUGH THERE SHOULD BE
+
 
 public class Main{  
     final static Myrandom random = new Myrandom();
