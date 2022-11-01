@@ -40,14 +40,11 @@ public class Node{
     public void adjustWeights(double learningRate){
             this.bWeight += this.errSig*learningRate;
             for(int link = 0; link<links;link++){ //loops through links
-                //System.out.println("\nweight\n");
-                //System.out.println(linkWeights[link]);
-                //System.out.printf("\n val: %f \n", linkVals[link]);
-                //System.out.println("\n Err: ");
-                //System.out.println(errSig);
-                this.linkWeights[link] += (this.errSig * this.linkVals[link] * learningRate);; //adjusts link weights
-                //System.out.println("weight: \n");
-                //System.out.println(linkWeights[link]);
+                if(Main.DEBUG) System.out.println("\nInitial Weight\n" + linkWeights[link]);
+                if(Main.DEBUG) System.out.printf("\n Link Value: %f \n", linkVals[link]);
+                if(Main.DEBUG) System.out.println("\n Err: " + errSig);
+                this.linkWeights[link] += (this.errSig * this.linkVals[link] * learningRate); //adjusts link weights
+                if(Main.DEBUG) System.out.println("Adjusted Weight: \n" + linkWeights[link]);
             }
     }
 

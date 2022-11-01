@@ -1,22 +1,16 @@
 package src;
 import java.util.*;
-
-import org.junit.Test;
-
 import SimpleFile.SimpleFile;
-//THE ISSUE IS THAT THE BRIGHTNESS IS NEVER GOING DOWN, ONLY UP
-//THERE AREN'T ANY NEGATIVE WEIGHTS EVEN THOUGH THERE SHOULD BE
 
-
-public class Main{  
+public class Main{
+    final static boolean DEBUG = false;
     final static Myrandom random = new Myrandom();
     static int INPUT = 0;
-    static int HIDDEN;
     static int ANSWER = 2;
     public static void main(String[] args){
-        ArrayList<Node>[] nodeArray = createNetwork(2,2,2, 1);
-        testNetworkAND(nodeArray, 1);
+        trainNetworkXOR(.05);
     }
+    
     public static ArrayList<Node>[] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
         ArrayList<Node>[] nodes = new NeuralNetwork(inputNum, hiddenNum, answerNum, hiddenLayers, random).getnodeArray();
         return nodes;
@@ -34,27 +28,76 @@ public class Main{
         return inputs;
     }
 
-    public static void testNetworkAND(ArrayList<Node>[] nodeArray, double learningRate){
-        String[] categories = {"1", "0"};
+    public static void trainNetworkAND(double learningRate){
+        String[] categories = {"0", "1"};
         ArrayList<Input> data = ANDFile();
-        NeuralNetwork.learn(nodeArray, data, categories, learningRate, 1);
+        ArrayList<Node>[] nodeArray = createNetwork(2,2,2, 1);
+        NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
 
     public static ArrayList<Input> XORFile(){
         SimpleFile file = new SimpleFile("XOR.txt");
         ArrayList<Input> inputs = new ArrayList<Input>();
         for(String line:file){
-            ArrayList<String> initInput = new ArrayList<>(Arrays.asList(line.split(";")));
-            ArrayList<Double> lineInputs = new ArrayList<>(Arrays.asList(Double.parseDouble(initInput.get(0).split(" ")[0]), Double.parseDouble(initInput.get(0).split(" ")[1])));
-            Input input = new Input(lineInputs, initInput.get(1));
+            ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(";")));
+            ArrayList<Double> lineInputs = new ArrayList<>(Arrays.asList(Double.parseDouble(initInputs.get(0).split(" ")[0]), Double.parseDouble(initInputs.get(0).split(" ")[1])));
+            Input input = new Input(lineInputs, initInputs.get(1));
             inputs.add(input);
         }
         return inputs;
     }
 
-    public static void testNetworkXOR(ArrayList<Node>[] nodeArray, double learningRate){
+    public static void trainNetworkXOR(double learningRate){
         String[] categories = {"1", "0"};
         ArrayList<Input> data = XORFile();
-        NeuralNetwork.learn(nodeArray, data, categories, learningRate, 1);
+        ArrayList<Node>[] nodeArray = createNetwork(2,2,2, 1);
+        NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
+
+    //Arraylist to hold arraylists of inputs
+    public static ArrayList<Input> trainDigitsFile(){
+        SimpleFile file = new SimpleFile("trainDigits.txt");
+        //arraylist of Inputs
+        ArrayList<Input> inputs = new ArrayList<Input>();
+        for(String line:file){
+            ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(",")));
+            ArrayList<Double> doubleInputs = new ArrayList<>();
+            for(int i = 0;i<initInputs.size()-1;i++){
+                doubleInputs.add(Double.parseDouble(initInputs.get(i)));
+            }
+            Input input = new Input(doubleInputs, initInputs.get(initInputs.size()-1));
+            inputs.add(input);
+        }
+        return inputs;
+    }
+
+    public static ArrayList<Input> testDigitsFile(){
+        SimpleFile file = new SimpleFile("testDigits.txt");
+        ArrayList<Input> inputs = new ArrayList<Input>();
+        for(String line:file){
+            ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(",")));
+            ArrayList<Double> doubleInputs = new ArrayList<>();
+            for(int i = 0;i<initInputs.size()-1;i++){
+                doubleInputs.add(Double.parseDouble(initInputs.get(i)));
+            }
+            Input input = new Input(doubleInputs, initInputs.get(initInputs.size()-1));
+            inputs.add(input);
+        }
+        return inputs;
+    }
+
+    public static ArrayList<Node>[] trainDigits(double learningRate){
+        String[] categories = {"0","1","2","3","4","5","6","7","8","9","10"};
+        ArrayList<Input> data = trainDigitsFile();
+        ArrayList<Node>[] nodeArray = createNetwork(2,2,2,2);
+        NeuralNetwork.learn(nodeArray, data, categories, learningRate);
+        return nodeArray;
+    }
+
+    public static void testDigits(ArrayList<Node>[] nodeArray){
+        String[] categories = {"0","1","2","3","4","5","6","7","8","9","10"};
+        ArrayList<Input> data = trainDigitsFile();
+        NeuralNetwork.test(data, categories);
+    }
+    
 }
