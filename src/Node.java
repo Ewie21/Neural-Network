@@ -1,6 +1,8 @@
 package src;
 
-public class Node{
+import java.io.Serializable;
+
+public class Node implements Serializable{
     double bWeight;
     //weights
     int links;

@@ -8,9 +8,9 @@ public class Main{
     static int INPUT = 0;
     static int ANSWER = 2;
     public static void main(String[] args){
-        trainNetworkXOR(.05);
+        trainDigits(.05);
     }
-    
+
     public static ArrayList<Node>[] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
         ArrayList<Node>[] nodes = new NeuralNetwork(inputNum, hiddenNum, answerNum, hiddenLayers, random).getnodeArray();
         return nodes;
@@ -56,7 +56,7 @@ public class Main{
 
     //Arraylist to hold arraylists of inputs
     public static ArrayList<Input> trainDigitsFile(){
-        SimpleFile file = new SimpleFile("trainDigits.txt");
+        SimpleFile file = new SimpleFile("digits-train.txt");
         //arraylist of Inputs
         ArrayList<Input> inputs = new ArrayList<Input>();
         for(String line:file){
@@ -72,7 +72,7 @@ public class Main{
     }
 
     public static ArrayList<Input> testDigitsFile(){
-        SimpleFile file = new SimpleFile("testDigits.txt");
+        SimpleFile file = new SimpleFile("digits-test.txt");
         ArrayList<Input> inputs = new ArrayList<Input>();
         for(String line:file){
             ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(",")));
@@ -87,17 +87,18 @@ public class Main{
     }
 
     public static ArrayList<Node>[] trainDigits(double learningRate){
-        String[] categories = {"0","1","2","3","4","5","6","7","8","9","10"};
+        String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
         ArrayList<Input> data = trainDigitsFile();
-        ArrayList<Node>[] nodeArray = createNetwork(2,2,2,2);
+        ArrayList<Node>[] nodeArray = createNetwork(64,128,10,1);
         NeuralNetwork.learn(nodeArray, data, categories, learningRate);
+        NeuralNetwork.test(data, categories, "/models/model1.ser");
         return nodeArray;
     }
 
     public static void testDigits(ArrayList<Node>[] nodeArray){
-        String[] categories = {"0","1","2","3","4","5","6","7","8","9","10"};
+        String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
         ArrayList<Input> data = trainDigitsFile();
-        NeuralNetwork.test(data, categories);
+        NeuralNetwork.test(data, categories, "model1.ser");
     }
     
 }

@@ -1,5 +1,9 @@
 package src;
-import java.util.*;  
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import SimpleFile.SimpleFile;
+import java.io.*;
 
 public class NeuralNetwork{
     public static ArrayList<Node>[] nodeArray;
@@ -10,7 +14,7 @@ public class NeuralNetwork{
         ANSWER = 1+hiddenLayers;
 
         nodeArray = new ArrayList[hiddenLayers+2];
-        //an array of arrayl lists
+        //an array of array lists
         for(int i = 0;i<nodeArray.length;i++){
             nodeArray[i] = new ArrayList<Node>();
         }
@@ -42,72 +46,62 @@ public class NeuralNetwork{
 
     public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate){
         int epochs = 0;
-        int sum = 0;
-        int count = 0;
-        int errPercentage = 0;
+        double sum = 0;
+        double count = 0;
+        double errPercentage = 0;
         int hiddenLayers = nodeArray.length - 2;
 
         categorize(categories, nodeArray);
-        while(errPercentage<100){ //read file in another function
+        while(errPercentage<99){ //read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
-            for(int l = 0; l<data.size(); l++){ //iterates through training examples
-                assignAnswers(data, l);
-                
-                pushDownstream(nodeArray, data, l);
-                
-                //selfAnalysis(epochs, sum, count, data, l, nodeArray);
 
-                Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
-        double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
-        if(epochs % 1234 == 0){
-            System.out.println("\n-------------------------\n");
-            System.out.printf("Epoch: %d\n", epochs);
-            System.out.printf("Non-Category: %s \nnon-Brightness: %f\n", nodeArray[ANSWER].get(1-largestNode(nodeArray)).category, nodeArray[ANSWER].get(1-largestNode(nodeArray)).cachedOutput);
-            System.out.printf("Category: %s \nBrightness: %f\n", brightestNode.category, brightness);
-            if(brightestNode.category.equals(data.get(l).answer)){
-                System.out.println("Yay ");
-            }
-        }
-        if(brightestNode.category.equals(data.get(l).answer)){
-            sum++;
-        }
-        count++;
-
+            for(int lineNum = 0; lineNum<data.size(); lineNum++){ //iterates through training examples
+                if(Main.DEBUG) System.out.println("made it");
+                assignAnswers(data, lineNum);
+                
+                pushDownstream(nodeArray, data, lineNum);
+                
+                ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, lineNum, nodeArray);
+                count = selfAnal.getCount();
+                sum = selfAnal.getSum();
+                Node brightestNode = selfAnal.getBrightestNode();
+                double brightness = selfAnal.getBrightness();
+                //System.out.println(sum);
+                //System.out.println(count);
                 backPropogate(nodeArray, learningRate, hiddenLayers);
             }
+            
             errPercentage = (sum/count)*100;
+            System.out.println(errPercentage);
             epochs++;
+            System.out.println(epochs);
         }
-        System.out.printf("Finished with an accuracy of %d/%d after %d epochs \n", sum, count, epochs);
+        //String name = writeModel(nodeArray);
+        //test(data, categories, "models/model1.ser");
+        System.out.printf("Training: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
     }
 
-    public static void test(ArrayList<Input> data, String[] categories){
-        int epochs = 0;
-        int sum = 0;
-        int count = 0;
+    public static void test(ArrayList<Input> data, String[] categories, String modelName){
+        int epochs = 1;
+        double sum = 0;
+        double count = 0;
+        nodeArray = readModel(modelName);
+
+        //tests model
         for(int l = 0;l<data.size();l++){
             assignAnswers(data, l);
 
             pushDownstream(nodeArray, data, l);
-            Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
-        double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
-        if(epochs % 1234 == 0){
-            System.out.println("\n-------------------------\n");
-            System.out.printf("Epoch: %d\n", epochs);
-            System.out.printf("Non-Category: %s \nnon-Brightness: %f\n", nodeArray[ANSWER].get(1-largestNode(nodeArray)).category, nodeArray[ANSWER].get(1-largestNode(nodeArray)).cachedOutput);
-            System.out.printf("Category: %s \nBrightness: %f\n", brightestNode.category, brightness);
-            if(brightestNode.category.equals(data.get(l).answer)){
-                System.out.println("Yay ");
-            }
+            
+            selfAnalysis(epochs, sum, count, data, l, nodeArray);
+            ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, l, nodeArray);
+            count = selfAnal.count;
+            sum = selfAnal.sum;
         }
-        if(brightestNode.category.equals(data.get(l).answer)){
-            sum++;
-        }
-        count++;
-            //selfAnalysis(epochs, sum, count, data, l, nodeArray);
-        }
+        double errPercentage = sum/count*100;
+        System.out.printf("Testing: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
     }
 
     public static void categorize(String[] categories, ArrayList<Node>[] nodeArray){
@@ -147,10 +141,29 @@ public class NeuralNetwork{
         }
     }
 
-    //public static Quartet<int, int,node, double> selfAnalysis(int epochs, int sum, int count, ArrayList<Input> data, int l, ArrayList<Node>[] nodeArray){
+    public static ReturnAnal selfAnalysis(double epochs, double sum, double count, ArrayList<Input> data, int l, ArrayList<Node>[] nodeArray){
+        Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
+        double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
         
-    //    return [count,sum,brightestNode, brightness];
-    //}
+        if(epochs % 10 == 0){
+            System.out.println("\n-------------------------\n");
+            System.out.printf("Epoch: %f\n", epochs);
+            if(Main.DEBUG) System.out.printf("Non-Category: %s \nnon-Brightness: %f\n", nodeArray[ANSWER].get(nodeArray[ANSWER].size()-1-largestNode(nodeArray)).category, nodeArray[ANSWER].get(nodeArray[ANSWER].size()-1-largestNode(nodeArray)).cachedOutput);
+            System.out.printf("Category: %s \nBrightness: %f\n", brightestNode.category, brightness);
+            if(brightestNode.category.equals(data.get(l).answer)){
+                System.out.println("Yay ");
+                //sum++;
+            }
+        }
+        
+        if(brightestNode.category.equals(data.get(l).answer)){
+            //System.out.println("made it");
+            sum++;
+        }
+        count++;
+        ReturnAnal analData = new ReturnAnal(count, sum, brightestNode, brightness);
+        return analData;
+    }
 
     public static void adjustHiddenWeights(ArrayList<Node>[] nodeArray, double learningRate, int hiddenLayers){
         //errsig and adjusting weights for hidden neurons
@@ -194,6 +207,57 @@ public class NeuralNetwork{
         //adjust weight for answer neurons
         for(int answer = 0; answer<nodeArray[ANSWER].size(); answer++){
             nodeArray[ANSWER].get(answer).adjustWeights(learningRate);
+        }
+    }
+    //figure out how to save both 
+    public static String writeModel(ArrayList<Node>[] nodeArray){
+        try{
+            int fileNum = Main.random.random.nextInt();
+            String name = String.format("models/model1.ser", fileNum);
+            File file = new File(name);
+            if(file.createNewFile()){
+                FileOutputStream fileModel = new FileOutputStream(name);
+                ObjectOutputStream out = new ObjectOutputStream(fileModel); 
+                out.writeObject(nodeArray);
+                out.close();
+                fileModel.close();
+                System.out.printf("Model %d Saved\n", fileNum);
+                return name;
+            }else{
+                System.out.println("Houston, this file already exists");
+                return writeModel(nodeArray);
+            }
+            
+        }catch(IOException e){
+            System.out.print("Houston, we have a problem: ");
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+        public static ArrayList<Node>[] readModel(String fileName){
+        ArrayList<Node>[] nodeArray = null;
+        try{
+            System.out.println("Loading Model");
+            FileInputStream readFileModel = new FileInputStream(fileName);
+            ObjectInputStream fileIn = new ObjectInputStream(readFileModel);
+            nodeArray = (ArrayList<Node>[]) fileIn.readObject();
+            fileIn.close();
+            for(int layer = 1; layer<nodeArray.length;layer++){
+                for(int node = 0; node<nodeArray[layer].size();node++){
+                    nodeArray[layer].get(node).linkVals = null;
+                }
+            }
+            System.out.println("Model Loaded");
+            return nodeArray;
+        }catch(IOException i){
+            System.out.println("Houston, we have a problem: ");
+            i.printStackTrace();
+            return nodeArray;
+        }catch(ClassNotFoundException c){
+            System.out.println("Houston, we have a problem. Wrong File Loaded!");
+            c.printStackTrace();
+            return nodeArray;
         }
     }
 

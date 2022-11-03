@@ -1,6 +1,6 @@
 package src;
 
-public class Sensor extends Node {
+public class Sensor extends Node{
 
     public Sensor(){
         super(0);
