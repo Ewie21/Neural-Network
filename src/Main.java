@@ -8,7 +8,8 @@ public class Main{
     static int INPUT = 0;
     static int ANSWER = 2;
     public static void main(String[] args){
-        trainDigits(.05);
+        //trainDigits(.05);
+        testDigits("src/models/model322715912.ser");
     }
 
     public static ArrayList<Node>[] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
@@ -90,15 +91,16 @@ public class Main{
         String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
         ArrayList<Input> data = trainDigitsFile();
         ArrayList<Node>[] nodeArray = createNetwork(64,128,10,1);
-        NeuralNetwork.learn(nodeArray, data, categories, learningRate);
-        NeuralNetwork.test(data, categories, "/models/model1.ser");
+        String name = NeuralNetwork.learn(nodeArray, data, categories, learningRate);
+        //testDigits("src/models/model1.ser");
+        testDigits(name);
         return nodeArray;
     }
 
-    public static void testDigits(ArrayList<Node>[] nodeArray){
+    public static void testDigits(String modelPath){
         String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
-        ArrayList<Input> data = trainDigitsFile();
-        NeuralNetwork.test(data, categories, "model1.ser");
+        ArrayList<Input> data = testDigitsFile();
+        NeuralNetwork.test(data, categories, modelPath);
     }
     
 }

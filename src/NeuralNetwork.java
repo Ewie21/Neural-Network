@@ -2,7 +2,6 @@ package src;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import SimpleFile.SimpleFile;
 import java.io.*;
 
 public class NeuralNetwork{
@@ -44,7 +43,7 @@ public class NeuralNetwork{
         }
     }
 
-    public static void learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate){
+    public static String learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate){
         int epochs = 0;
         double sum = 0;
         double count = 0;
@@ -58,8 +57,8 @@ public class NeuralNetwork{
             errPercentage = 0;
 
             for(int lineNum = 0; lineNum<data.size(); lineNum++){ //iterates through training examples
-                if(Main.DEBUG) System.out.println("made it");
-                assignAnswers(data, lineNum);
+                if(Main.DEBUG) System.out.println("training checkpoint one passed");
+                assignAnswers(data, lineNum, nodeArray, ANSWER);
                 
                 pushDownstream(nodeArray, data, lineNum);
                 
@@ -78,20 +77,25 @@ public class NeuralNetwork{
             epochs++;
             System.out.println(epochs);
         }
-        //String name = writeModel(nodeArray);
-        //test(data, categories, "models/model1.ser");
+        String name = writeModel(nodeArray);
         System.out.printf("Training: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
+        return name;
     }
 
     public static void test(ArrayList<Input> data, String[] categories, String modelName){
-        int epochs = 1;
+        int epochs = 0;
         double sum = 0;
         double count = 0;
         nodeArray = readModel(modelName);
+        ANSWER = nodeArray.length - 1;
+        for(int node = 0; node<nodeArray[ANSWER].size(); node++){
+            nodeArray[ANSWER].get(node).category = categories[node];
+            if(Main.DEBUG) System.out.println(nodeArray[ANSWER].get(node).category);
+        }
 
         //tests model
         for(int l = 0;l<data.size();l++){
-            assignAnswers(data, l);
+            assignAnswers(data, l, nodeArray, ANSWER);
 
             pushDownstream(nodeArray, data, l);
             
@@ -110,7 +114,7 @@ public class NeuralNetwork{
         }
     }
 
-    public static void assignAnswers(ArrayList<Input> data, int l){
+    public static void assignAnswers(ArrayList<Input> data, int l, ArrayList<Node>[] nodeArray, int ANSWER){
         //assigns correct answers to answer nodes based on their category
         for(int node = 0; node<nodeArray[ANSWER].size();node++){
             if(nodeArray[ANSWER].get(node).category.equals(data.get(l).answer)){
@@ -213,7 +217,7 @@ public class NeuralNetwork{
     public static String writeModel(ArrayList<Node>[] nodeArray){
         try{
             int fileNum = Main.random.random.nextInt();
-            String name = String.format("models/model1.ser", fileNum);
+            String name = String.format("src/models/model%d.ser", fileNum);
             File file = new File(name);
             if(file.createNewFile()){
                 FileOutputStream fileModel = new FileOutputStream(name);
@@ -236,8 +240,8 @@ public class NeuralNetwork{
     }
 
         public static ArrayList<Node>[] readModel(String fileName){
-        ArrayList<Node>[] nodeArray = null;
         try{
+            ArrayList<Node>[] nodeArray = null;
             System.out.println("Loading Model");
             FileInputStream readFileModel = new FileInputStream(fileName);
             ObjectInputStream fileIn = new ObjectInputStream(readFileModel);
@@ -245,7 +249,9 @@ public class NeuralNetwork{
             fileIn.close();
             for(int layer = 1; layer<nodeArray.length;layer++){
                 for(int node = 0; node<nodeArray[layer].size();node++){
-                    nodeArray[layer].get(node).linkVals = null;
+                    for(int link = 0; link<nodeArray[layer].get(node).linkVals.length; link++){
+                        nodeArray[layer].get(node).linkVals[link] = 0;
+                    }
                 }
             }
             System.out.println("Model Loaded");
