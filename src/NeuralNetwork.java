@@ -51,7 +51,7 @@ public class NeuralNetwork{
         int hiddenLayers = nodeArray.length - 2;
 
         categorize(categories, nodeArray);
-        while(errPercentage<99){ //read file in another function
+        while(errPercentage<99.999){ //read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
