@@ -8,6 +8,7 @@ public class NeuralNetwork{
     public static ArrayList<Node>[] nodeArray;
     public static int INPUT;
     public static int ANSWER;
+    //Neural network constructor; An Array of Arraylists of Nodes
     public NeuralNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers, Myrandom random){
         INPUT = 0;
         ANSWER = 1+hiddenLayers;
@@ -18,7 +19,7 @@ public class NeuralNetwork{
             nodeArray[i] = new ArrayList<Node>();
         }
         //create sensors
-        for(int i = 0; i<inputNum; i++){
+        for(int i = 0; i<inputNum; i++){ 
             nodeArray[INPUT].add(new Sensor());
         }
         //create hidden layers
@@ -42,7 +43,7 @@ public class NeuralNetwork{
             }
         }
     }
-
+    //Trains the network
     public static String learn(ArrayList<Node>[] nodeArray, ArrayList<Input> data, String[] categories, double learningRate){
         int epochs = 0;
         double sum = 0;
@@ -51,6 +52,7 @@ public class NeuralNetwork{
         int hiddenLayers = nodeArray.length - 2;
 
         categorize(categories, nodeArray);
+
         while(errPercentage<99.999){ //read file in another function
             count = 0;
             sum = 0;
@@ -71,17 +73,20 @@ public class NeuralNetwork{
                 //System.out.println(count);
                 backPropogate(nodeArray, learningRate, hiddenLayers);
             }
-            
+            double oldErrPercentage = errPercentage;
             errPercentage = (sum/count)*100;
             System.out.println(errPercentage);
             epochs++;
             System.out.println(epochs);
+            if(errPercentage - oldErrPercentage <0.000001){
+                break;
+            }
         }
         String name = writeModel(nodeArray);
         System.out.printf("Training: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
         return name;
-    }
-
+    }   
+    //Tests a model on a dataset
     public static void test(ArrayList<Input> data, String[] categories, String modelName){
         int epochs = 0;
         double sum = 0;
@@ -107,15 +112,14 @@ public class NeuralNetwork{
         double errPercentage = sum/count*100;
         System.out.printf("Testing: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
     }
-
+    //Assigns categories to each answer neuron
     public static void categorize(String[] categories, ArrayList<Node>[] nodeArray){
         for(int i = 0; i<categories.length; i++){
             nodeArray[ANSWER].get(i).category = categories[i];
         }
     }
-
+    //Assigns correct answers to each answer neuron by checking their category against the given answer
     public static void assignAnswers(ArrayList<Input> data, int l, ArrayList<Node>[] nodeArray, int ANSWER){
-        //assigns correct answers to answer nodes based on their category
         for(int node = 0; node<nodeArray[ANSWER].size();node++){
             if(nodeArray[ANSWER].get(node).category.equals(data.get(l).answer)){
                 nodeArray[ANSWER].get(node).correctAnswer = 1;
@@ -124,7 +128,7 @@ public class NeuralNetwork{
             }
         }
     }
-
+    //Passes in data to to the sensors, pushs data 'downstream' through the network
     public static void pushDownstream(ArrayList<Node>[] nodeArray, ArrayList<Input> data, int l){
         //passes in data for input layer
         for(int i = 0; i<nodeArray[INPUT].size(); i++){//i = current input index
@@ -137,14 +141,14 @@ public class NeuralNetwork{
                 for(int prevNode = 0; prevNode<nodeArray[layer-1].size(); prevNode++){ //previous layer
                     nodeArray[layer].get(node).linkVals[prevNode] = nodeArray[layer - 1].get(prevNode).cachedOutput;
                     nodeArray[layer].get(node).output();
-                    //if(layer == ANSWER){
-                    //   System.out.printf("ran output on answer %f\n", nodeArray[layer].get(node).cachedOutput);
-                    //}
+                    if(Main.DEBUG) if(layer == ANSWER){
+                       System.out.printf("ran output on answer %f\n", nodeArray[layer].get(node).cachedOutput);
+                    }
                 }
             }
         }
     }
-
+    //Analyses chosen answer neuron's result and prints 'Yay' if the network chose correct; also increments sum and count
     public static ReturnAnal selfAnalysis(double epochs, double sum, double count, ArrayList<Input> data, int l, ArrayList<Node>[] nodeArray){
         Node brightestNode = nodeArray[ANSWER].get(largestNode(nodeArray));
         double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
@@ -161,14 +165,14 @@ public class NeuralNetwork{
         }
         
         if(brightestNode.category.equals(data.get(l).answer)){
-            //System.out.println("made it");
+            if(Main.DEBUG) System.out.println("Sum++");
             sum++;
         }
         count++;
         ReturnAnal analData = new ReturnAnal(count, sum, brightestNode, brightness);
         return analData;
     }
-
+    //Adjusts the weights of all the hidden neurons in a network
     public static void adjustHiddenWeights(ArrayList<Node>[] nodeArray, double learningRate, int hiddenLayers){
         //errsig and adjusting weights for hidden neurons
         for(int HIDDEN = 1; HIDDEN < hiddenLayers+1;HIDDEN++){
@@ -187,7 +191,7 @@ public class NeuralNetwork{
             }
         }
     }
-
+    //Chooses the largest node and returns its index
     public static int largestNode(ArrayList<Node>[] nodeArray){
         int largestNode = 0;
         for(int node = 0; node<nodeArray[ANSWER].size();node++){
@@ -198,7 +202,7 @@ public class NeuralNetwork{
         return largestNode;
     }
 
-
+    //Goes back through the network adjusting the weights of the all the neurons based on their error signal
     public static void backPropogate(ArrayList<Node>[] nodeArray, double learningRate, int hiddenLayers){
         //errsig for answer neurons
         for(int answer = 0; answer<nodeArray[ANSWER].size();answer++){
@@ -213,7 +217,7 @@ public class NeuralNetwork{
             nodeArray[ANSWER].get(answer).adjustWeights(learningRate);
         }
     }
-    //figure out how to save both 
+    //Serializes a trained model so it can be used later, returns the name of the model
     public static String writeModel(ArrayList<Node>[] nodeArray){
         try{
             int fileNum = Main.random.random.nextInt();
@@ -238,8 +242,8 @@ public class NeuralNetwork{
             return "";
         }
     }
-
-        public static ArrayList<Node>[] readModel(String fileName){
+    //Deserializes a model into a neural network, returns the neural network
+    public static ArrayList<Node>[] readModel(String fileName){
         try{
             ArrayList<Node>[] nodeArray = null;
             System.out.println("Loading Model");
@@ -266,7 +270,7 @@ public class NeuralNetwork{
             return nodeArray;
         }
     }
-
+    //Getting function for the neural network
     public ArrayList<Node>[] getnodeArray(){
         return nodeArray;
     }
