@@ -8,8 +8,8 @@ public class Main{
     static int INPUT = 0;
     static int ANSWER = 2;
     public static void main(String[] args){
-        trainDigits(.05);
-        //testDigits("src/models/model322715912.ser");
+        //trainDigits(.05);
+        testDigits("src/models/modelbest.ser"); 
         //VerySimpleWebcamViewer.main(args);
     }
 

@@ -1,5 +1,5 @@
-​// This is an example of using the Webcam Capture library that includes drawing on the image
-
+​//This is an example of using the Webcam Capture library that includes drawing on the image
+package src;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.Color;

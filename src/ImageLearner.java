@@ -1,4 +1,5 @@
 package src;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -16,7 +17,7 @@ import javax.imageio.*;
 class ImageLearner
 {
   final String[] categories = new String[] {
-   "Moe", "Larry", "Curly"
+   "Daeja", "Tia", "Elo"
   };
   
   static final int cameraCropLeftX = 200;
