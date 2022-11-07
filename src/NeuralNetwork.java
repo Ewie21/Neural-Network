@@ -53,7 +53,7 @@ public class NeuralNetwork{
 
         categorize(categories, nodeArray);
 
-        while(errPercentage<99.999){ //read file in another function
+        while(errPercentage<99.9){ //read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
