@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 
 import java.util.*;
+import java.util.List;
 
 import SimpleFile.SimpleFile;
 
@@ -28,6 +29,8 @@ class ImageLearner
   static final int sensorWidth = 30;
   static final int sensorHeight = 30;
   
+  static ArrayList<Input> inputs = new ArrayList<>();
+
   JFrame controlFrame;
   JLabel dirLabel;
   JLabel categoryLabel;
@@ -162,12 +165,12 @@ class ImageLearner
         JOptionPane.showMessageDialog(controlFrame, "You must select a directory first.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
       }
-      java.util.List<Example> examples = ImageExample.loadExamples(dataDir.getAbsolutePath());
+      java.util.List<ImageSensor> examples = ImageSensor.loadExamples(dataDir.getAbsolutePath());
       int numInputSensors = sensorWidth * sensorHeight;
       int numHiddenNeurons = 5;
       double learningRate = 0.1;
-      ArrayList<Node>[] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, ImageExample.getNumCategories(), learningRate).getnodeArray();
-      net.learn(examples, examples, examples, 0.99, 10, 10000);
+      Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, ImageSensor.getNumCategories(), 1, Main.random).getnodeArray();
+      NeuralNetwork.learn(net, inputs, categories, learningRate);
     }
   }
   
@@ -181,9 +184,15 @@ class ImageLearner
       }
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
-      ImageExample example = new ImageExample(image, null);
-      int category = net.categorize(example);
-      String categoryName = ImageExample.getCategoryName(category);
+      ImageSensor example = new ImageSensor(image, null);
+      //Todo:turn coooked images into Input classes
+     
+
+      Input input = new Input(example.getInputs(),"");//category as 2nd arg here
+      inputs.add(input);
+      //tests the network on one example
+      String categoryName = NeuralNetwork.test(inputs, categories, "src/models/imageModels/");
+      //ImageSensor.getCategoryName(category);
       System.out.println("Identified: " + categoryName);
       categoryLabel.setText(categoryName);
     }

@@ -6,15 +6,15 @@ public class Main{
     final static boolean DEBUG = false;
     final static Myrandom random = new Myrandom();
     static int INPUT = 0;
-    static int ANSWER = 2;
+    static int ANSWER;
     public static void main(String[] args){
-        //trainDigits(.05);
-        testDigits("src/models/modelbest.ser"); 
+        trainDigits(.05);
+        //testDigits("src/models/modelbest.ser"); 
         //VerySimpleWebcamViewer.main(args);
     }
     //Creates the network 
-    public static ArrayList<Node>[] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
-        ArrayList<Node>[] nodes = new NeuralNetwork(inputNum, hiddenNum, answerNum, hiddenLayers, random).getnodeArray();
+    public static Node[][] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
+        Node[][] nodes = new NeuralNetwork(inputNum, hiddenNum, answerNum, hiddenLayers, random).getnodeArray();
         return nodes;
     }   
     //Reads the AND data file and writes it to an Input object of answers and inputs
@@ -33,7 +33,7 @@ public class Main{
     public static void trainNetworkAND(double learningRate){
         String[] categories = {"0", "1"};
         ArrayList<Input> data = ANDFile();
-        ArrayList<Node>[] nodeArray = createNetwork(2,2,2, 1);
+        Node[][] nodeArray = createNetwork(2,2,2, 1);
         NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
     //Reads the XOR data file and writes it to an Input object of answer and inputs
@@ -52,7 +52,7 @@ public class Main{
     public static void trainNetworkXOR(double learningRate){
         String[] categories = {"1", "0"};
         ArrayList<Input> data = XORFile();
-        ArrayList<Node>[] nodeArray = createNetwork(2,2,2, 1);
+        Node[][] nodeArray = createNetwork(2,2,2, 1);
         NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
 
@@ -90,10 +90,10 @@ public class Main{
     //Each line of the file contains 64 integers from 0 to 16 representing greyscale values
     //Each 8 integers represents a different line of pixels, making the image 16x16
     //The greyscale values are the average of the greyscale of a higher resolution image
-    public static ArrayList<Node>[] trainDigits(double learningRate){
+    public static Node[][] trainDigits(double learningRate){
         String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
         ArrayList<Input> data = trainDigitsFile();
-        ArrayList<Node>[] nodeArray = createNetwork(64,128,10,1);
+        Node[][] nodeArray = createNetwork(64,128,10,1);
         String name = NeuralNetwork.learn(nodeArray, data, categories, learningRate);
         //testDigits("src/models/model1.ser");
         testDigits(name);

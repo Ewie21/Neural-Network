@@ -10,29 +10,37 @@ import java.util.*;
 
 import SimpleFile.SimpleFile;
 
-class ImageExample implements Example
+class ImageSensor
 {
   // static fields to store category names and numbers
   private static Map<String,Integer> categoryNumbers;  // map category names to numbers
   private static String[] categoryNames;
   private static int numCategories = 0;
  
-  private double[] inputs;
+  private ArrayList<Double> inputs;
   private int category = -1;
+
+  public ArrayList<Double> getInputs(){
+    return this.inputs;
+  }
+
+  public static String[] getCategoryNames(){
+    return categoryNames;
+  }
  
-  ImageExample(BufferedImage image, String categoryName)
+  ImageSensor(BufferedImage image, String categoryName)
   {
     if (categoryName != null)
       category = categoryNumbers.get(categoryName);
     int width = image.getWidth();
     int height = image.getHeight();
-    inputs = new double[width*height];
+    inputs = new ArrayList<>(width*height);
     for (int x=0; x<width; x++) {
       for (int y=0; y<height; y++) {
         int rgb = image.getRGB(x, y);
         Color color = new Color(rgb);
         int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
-        inputs[y*width+x] = gray/255.0;
+        inputs.set(y*width+x, gray/255.0);
       }
     }
   }
@@ -54,8 +62,8 @@ class ImageExample implements Example
   {
     if (inputNumber == 0)
       return 1.0;
-    else
-      return inputs[inputNumber-1];
+    else  
+      return inputs.get(inputNumber-1);
   }
  
   public double getOutputValue(int outputNumber)
@@ -68,9 +76,9 @@ class ImageExample implements Example
  
   
  
-  static java.util.List<Example> loadExamples(String dataDirPath)
+  static java.util.List<ImageSensor> loadExamples(String dataDirPath)
   {
-    LinkedList<Example> examples = new LinkedList<Example>();
+    LinkedList<ImageSensor> examples = new LinkedList<ImageSensor>();
     categoryNumbers = new HashMap<String,Integer>();
     categoryNames = new String[100];
     File dataDir = new File(dataDirPath);
@@ -93,7 +101,7 @@ class ImageExample implements Example
      
       try {
         BufferedImage image = ImageIO.read(new File(cookedDir, imageName));
-        ImageExample example = new ImageExample(image, category);
+        ImageSensor example = new ImageSensor(image, category);
         examples.add(example);
       }
       catch (IOException ioe) {
