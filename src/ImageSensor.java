@@ -10,14 +10,14 @@ import java.util.*;
 
 import SimpleFile.SimpleFile;
 
-class ImageSensor
+class ImageSensor extends Input
 {
   // static fields to store category names and numbers
   private static Map<String,Integer> categoryNumbers;  // map category names to numbers
   private static String[] categoryNames;
   private static int numCategories = 0;
  
-  private ArrayList<Double> inputs;
+  private static ArrayList<Double> inputs;
   private int category = -1;
 
   public ArrayList<Double> getInputs(){
@@ -30,6 +30,7 @@ class ImageSensor
  
   ImageSensor(BufferedImage image, String categoryName)
   {
+    super(inputs ,categoryName);
     if (categoryName != null)
       category = categoryNumbers.get(categoryName);
     int width = image.getWidth();
