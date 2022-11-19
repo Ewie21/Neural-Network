@@ -58,7 +58,7 @@ public class NeuralNetwork{
 
         categorize(categories, nodeArray);
 
-        while(errPercentage<99.5){ //read file in another function
+        while(errPercentage<99.99){ //read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
@@ -230,7 +230,7 @@ public class NeuralNetwork{
     public static String writeModel(Node[][] nodeArray){
         try{
             int fileNum = Main.random.random.nextInt();
-            String name = String.format("src/models/model%d.ser", fileNum);
+            String name = String.format("src/models/modelBest.ser", fileNum);
             File file = new File(name);
             if(file.createNewFile()){
                 FileOutputStream fileModel = new FileOutputStream(name);

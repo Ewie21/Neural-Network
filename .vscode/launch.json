@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch WebcamViewerExample",
+            "request": "launch",
+            "mainClass": "WebcamViewerExample",
+            "projectName": "neural-network_9cf64a85"
+        },
+        {
+            "type": "java",
             "name": "Launch ImageLearner",
             "request": "launch",
             "mainClass": "src.ImageLearner",

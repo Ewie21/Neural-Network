@@ -10,7 +10,7 @@ import java.util.*;
 
 import SimpleFile.SimpleFile;
 
-class ImageSensor
+class ImageSensor extends Sensor
 {
   // static fields to store category names and numbers
   private static Map<String,Integer> categoryNumbers;  // map category names to numbers

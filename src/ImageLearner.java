@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.awt.image.*;
 
 import java.util.*;
-import java.util.List;
 
 import SimpleFile.SimpleFile;
 
@@ -29,7 +28,7 @@ class ImageLearner
   static final int sensorWidth = 30;
   static final int sensorHeight = 30;
   
-  static ArrayList<Input> inputs = new ArrayList<>();
+  static ArrayList<ImageSensor> inputs = new ArrayList<>();
 
   JFrame controlFrame;
   JLabel dirLabel;
@@ -45,7 +44,7 @@ class ImageLearner
   {
     JButton selectDirButton = new JButton("Select Directory");
     selectDirButton.addActionListener(new SelectDirListener());
-    dirLabel = new JLabel("       ");
+    dirLabel = new JLabel("");
     
     Box controls = Box.createVerticalBox();
     controls.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -184,15 +183,12 @@ class ImageLearner
       }
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
-      ImageSensor example = new ImageSensor(image, null);
-      //Todo:turn coooked images into Input classes
-     
+      ImageSensor example = new ImageSensor(image, null);     
 
-      Input input = new Input(example.getInputs(),"");//category as 2nd arg here
-      inputs.add(input);
+      inputs.add(example);
       //tests the network on one example
       String categoryName = NeuralNetwork.test(inputs, categories, "src/models/imageModels/");
-      //ImageSensor.getCategoryName(category);
+      ImageSensor.getCategoryName(category);
       System.out.println("Identified: " + categoryName);
       categoryLabel.setText(categoryName);
     }

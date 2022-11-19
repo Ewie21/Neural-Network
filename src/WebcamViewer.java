@@ -1,10 +1,15 @@
-​//This is an example of using the Webcam Capture library that includes drawing on the image
 package src;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.*;
 
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+
+import java.io.*;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
@@ -22,18 +27,19 @@ public class WebcamViewer extends JFrame {
         DrawableWebcamPanel panel = new DrawableWebcamPanel(webcam);
         panel.setImageSizeDisplayed(true);
         panel.setMirrored(true); // optionally flip the camera horizontally
-
         this.getContentPane().add(panel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         pack();
         setVisible(true);
     }
-    
+
     BufferedImage getImage()
     {
         return webcam.getImage();
     }
+
+      
 }
 
 class DrawableWebcamPanel extends WebcamPanel
