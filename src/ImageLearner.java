@@ -38,7 +38,7 @@ class ImageLearner
   WebcamViewer videoCapture = null;
   SimpleFile indexFile = null;
   PrintStream indexStream = null;
-  ArrayList<Node>[] net;
+  Node[][] net;
   
   ImageLearner()
   {
@@ -171,6 +171,7 @@ class ImageLearner
       double learningRate = 0.1;
       Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, ImageSensor.getNumCategories(), 1, Main.random).getnodeArray();
       NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
+      NeuralNetwork.writeModel(net);
     }
   }
   
@@ -184,12 +185,13 @@ class ImageLearner
       }
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
-      ImageSensor example = new ImageSensor(image, null);     
-
-      inputs.add(example);
+      ImageSensor example = new ImageSensor(image, null);
+      ArrayList<Input> examples = new ArrayList<Input>();
+      examples.add(example);
+      String modelName = "";
+      String categoryName = NeuralNetwork.test(examples, categories, modelName);
       //tests the network on one example
-      String categoryName = NeuralNetwork.test(inputs, categories, "src/models/imageModels/");
-      ImageSensor.getCategoryName(category);
+      //String categoryName = ImageSensor.getCategoryName(category);
       System.out.println("Identified: " + categoryName);
       categoryLabel.setText(categoryName);
     }

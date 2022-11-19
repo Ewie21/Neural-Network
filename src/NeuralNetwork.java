@@ -72,8 +72,6 @@ public class NeuralNetwork{
                 ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, lineNum, nodeArray);
                 count = selfAnal.getCount();
                 sum = selfAnal.getSum();
-                Node brightestNode = selfAnal.getBrightestNode();
-                double brightness = selfAnal.getBrightness();
                 //System.out.println(sum);
                 //System.out.println(count);
                 backPropogate(nodeArray, learningRate, hiddenLayers);
@@ -96,7 +94,7 @@ public class NeuralNetwork{
         int epochs = 0;
         double sum = 0;
         double count = 0;
-        String cCategory = "";
+        String category = "";
         nodeArray = readModel(modelName);
         ANSWER = nodeArray.length - 1;
 
@@ -113,13 +111,13 @@ public class NeuralNetwork{
             
             selfAnalysis(epochs, sum, count, data, l, nodeArray);
             ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, l, nodeArray);
-            cCategory = selfAnal.brightestNode.category;
+            category = selfAnal.brightestNode.category;
             count = selfAnal.count;
             sum = selfAnal.sum;
         }
         double errPercentage = sum/count*100;
         System.out.printf("Testing: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
-        return cCategory;
+        return category;
     }
     //Assigns categories to each answer neuron
     public static void categorize(String[] categories, Node[][] nodeArray){

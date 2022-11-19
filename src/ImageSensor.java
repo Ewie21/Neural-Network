@@ -30,7 +30,7 @@ class ImageSensor extends Input
  
   ImageSensor(BufferedImage image, String categoryName)
   {
-    super(inputs ,categoryName);
+    super(inputs, categoryName);
     if (categoryName != null)
       category = categoryNumbers.get(categoryName);
     int width = image.getWidth();
