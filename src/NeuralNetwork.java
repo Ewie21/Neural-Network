@@ -230,7 +230,7 @@ public class NeuralNetwork{
     public static String writeModel(Node[][] nodeArray){
         try{
             int fileNum = Main.random.random.nextInt();
-            String name = String.format("src/models/modelBest.ser", fileNum);
+            String name = String.format("/models/model%d.ser", fileNum);
             File file = new File(name);
             if(file.createNewFile()){
                 FileOutputStream fileModel = new FileOutputStream(name);

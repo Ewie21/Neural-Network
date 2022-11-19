@@ -165,11 +165,12 @@ class ImageLearner
         return;
       }
       java.util.List<ImageSensor> examples = ImageSensor.loadExamples(dataDir.getAbsolutePath());
+      ArrayList<ImageSensor> examplesArrayList = new ArrayList<ImageSensor>(examples);
       int numInputSensors = sensorWidth * sensorHeight;
       int numHiddenNeurons = 5;
       double learningRate = 0.1;
       Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, ImageSensor.getNumCategories(), 1, Main.random).getnodeArray();
-      NeuralNetwork.learn(net, inputs, categories, learningRate);
+      NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
     }
   }
   

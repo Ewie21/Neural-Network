@@ -8,8 +8,8 @@ public class Main{
     static int INPUT = 0;
     static int ANSWER;
     public static void main(String[] args){
-        trainDigits(.05);
-        //testDigits("src/models/modelbest.ser"); 
+        //trainDigits(.05);
+        testDigits("/models/modelbest.ser"); 
         //VerySimpleWebcamViewer.main(args);
     }
     //Creates the network 
