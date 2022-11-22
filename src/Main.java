@@ -9,8 +9,9 @@ public class Main{
     static int ANSWER;
     public static void main(String[] args){
         //trainDigits(.05);
-        testDigits("/models/modelbest.ser"); 
+        //testDigits("/models/modelbest.ser"); 
         //VerySimpleWebcamViewer.main(args);
+        ImageLearner.main(args);;
     }
     //Creates the network 
     public static Node[][] createNetwork(int inputNum, int hiddenNum, int answerNum, int hiddenLayers){
