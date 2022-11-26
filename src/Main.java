@@ -11,7 +11,6 @@ public class Main{
     public static void main(String[] args){
         //trainDigits(.05);
         //testDigits("/models/modelbest.ser"); 
-        //VerySimpleWebcamViewer.main(args);
         ImageLearner.main(args);;
     }
     //Creates the network 
@@ -20,13 +19,13 @@ public class Main{
         return nodes;
     }   
     //Reads the AND data file and writes it to an Input object of answers and inputs
-    public static ArrayList<Input> ANDFile(){
+    public static ArrayList<StandardInput> ANDFile(){
         SimpleFile file = new SimpleFile("AND.txt");
-        ArrayList<Input> inputs = new ArrayList<Input>();
+        ArrayList<StandardInput> inputs = new ArrayList<StandardInput>();
         for(String line:file){
             ArrayList<String> initInput = new ArrayList<>(Arrays.asList(line.split(";")));
             ArrayList<Double> lineInputs = new ArrayList<>(Arrays.asList(Double.parseDouble(initInput.get(0).split(" ")[0]), Double.parseDouble(initInput.get(0).split(" ")[1])));
-            Input input = new Input(lineInputs, initInput.get(1));
+            StandardInput input = new StandardInput(lineInputs, initInput.get(1));
             inputs.add(input);
         }
         return inputs;
@@ -34,18 +33,18 @@ public class Main{
     //Trains the neural network into an AND gate, using the AND dataset
     public static void trainNetworkAND(double learningRate){
         String[] categories = {"0", "1"};
-        ArrayList<Input> data = ANDFile();
+        ArrayList<StandardInput> data = ANDFile();
         Node[][] nodeArray = createNetwork(2,2,2, 1);
         NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
     //Reads the XOR data file and writes it to an Input object of answer and inputs
-    public static ArrayList<Input> XORFile(){
+    public static ArrayList<StandardInput> XORFile(){
         SimpleFile file = new SimpleFile("XOR.txt");
-        ArrayList<Input> inputs = new ArrayList<Input>();
+        ArrayList<StandardInput> inputs = new ArrayList<StandardInput>();
         for(String line:file){
             ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(";")));
             ArrayList<Double> lineInputs = new ArrayList<>(Arrays.asList(Double.parseDouble(initInputs.get(0).split(" ")[0]), Double.parseDouble(initInputs.get(0).split(" ")[1])));
-            Input input = new Input(lineInputs, initInputs.get(1));
+            StandardInput input = new StandardInput(lineInputs, initInputs.get(1));
             inputs.add(input);
         }
         return inputs;
@@ -53,37 +52,37 @@ public class Main{
     //Trains the neural network into an XOR gate, using the XOR dataset
     public static void trainNetworkXOR(double learningRate){
         String[] categories = {"1", "0"};
-        ArrayList<Input> data = XORFile();
+        ArrayList<StandardInput> data = XORFile();
         Node[][] nodeArray = createNetwork(2,2,2, 1);
         NeuralNetwork.learn(nodeArray, data, categories, learningRate);
     }
 
     //Reads digits-train file and writes it to an Input object of answers and inputs
-    public static ArrayList<Input> trainDigitsFile(){
+    public static ArrayList<StandardInput> trainDigitsFile(){
         SimpleFile file = new SimpleFile("digits-train.txt");
-        ArrayList<Input> inputs = new ArrayList<Input>();
+        ArrayList<StandardInput> inputs = new ArrayList<StandardInput>();
         for(String line:file){
             ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(",")));
             ArrayList<Double> doubleInputs = new ArrayList<>();
             for(int i = 0;i<initInputs.size()-1;i++){
                 doubleInputs.add(Double.parseDouble(initInputs.get(i)));
             }
-            Input input = new Input(doubleInputs, initInputs.get(initInputs.size()-1));
+            StandardInput input = new StandardInput(doubleInputs, initInputs.get(initInputs.size()-1));
             inputs.add(input);
         }
         return inputs;
     }
     //Reads digits-test file and writes it to an Input object of answers and inputs
-    public static ArrayList<Input> testDigitsFile(){
+    public static ArrayList<StandardInput> testDigitsFile(){
         SimpleFile file = new SimpleFile("digits-test.txt");
-        ArrayList<Input> inputs = new ArrayList<Input>();
+        ArrayList<StandardInput> inputs = new ArrayList<StandardInput>();
         for(String line:file){
             ArrayList<String> initInputs = new ArrayList<>(Arrays.asList(line.split(",")));
             ArrayList<Double> doubleInputs = new ArrayList<>();
             for(int i = 0;i<initInputs.size()-1;i++){
                 doubleInputs.add(Double.parseDouble(initInputs.get(i)));
             }
-            Input input = new Input(doubleInputs, initInputs.get(initInputs.size()-1));
+            StandardInput input = new StandardInput(doubleInputs, initInputs.get(initInputs.size()-1));
             inputs.add(input);
         }
         return inputs;
@@ -94,7 +93,7 @@ public class Main{
     //The greyscale values are the average of the greyscale of a higher resolution image
     public static Node[][] trainDigits(double learningRate){
         String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
-        ArrayList<Input> data = trainDigitsFile();
+        ArrayList<StandardInput> data = trainDigitsFile();
         Node[][] nodeArray = createNetwork(64,128,10,1);
         String name = NeuralNetwork.learn(nodeArray, data, categories, learningRate);
         //testDigits("src/models/model1.ser");
@@ -104,8 +103,7 @@ public class Main{
     //Tests a pre-trained model on the digits-test data set
     public static void testDigits(String modelPath){
         String[] categories = {"0","1","2","3","4","5","6","7","8","9"};
-        ArrayList<Input> data = testDigitsFile();
+        ArrayList<StandardInput> data = testDigitsFile();
         NeuralNetwork.test(data, categories, modelPath);
     }
-    
 }

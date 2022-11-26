@@ -190,7 +190,6 @@ class ImageLearner
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
       //elo
-
       int width = image.getWidth();
       int height = image.getHeight();
       ArrayList<Double> inputsSensor = new ArrayList<>(width*height);

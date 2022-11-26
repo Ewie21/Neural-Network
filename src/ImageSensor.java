@@ -79,19 +79,21 @@ class ImageSensor extends Input
       String name = fields[0];
       String category = fields[1];
       //System.out.println("reading " + name);
-      if (! categoryNumbers.containsKey(category)) {
+      if (! categoryNumbers.containsKey(category)) {//this conditional is triggering 
         //System.out.println("Category " + category + " is number " + numCategories);
+        System.out.println("made it");
         categoryNumbers.put(category, numCategories);
         categoryNames[numCategories] = category;
         numCategories++;
-     }
+      }
       String imageName = name + ".png";
      
       try {
         BufferedImage image = ImageIO.read(new File(cookedDir, imageName));
         //elo
-        if (imageName != null)
+        if (imageName != null){
           Category = categoryNumbers.get(imageName);
+        }
         int width = image.getWidth();
         int height = image.getHeight();
         inputs = new ArrayList<>(width*height);
@@ -104,7 +106,6 @@ class ImageSensor extends Input
           }
         }
         //
-        
         ImageSensor example = new ImageSensor(inputs, category);
         examples.add(example);
       }
