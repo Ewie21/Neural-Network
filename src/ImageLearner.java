@@ -165,7 +165,10 @@ class ImageLearner
         return;
       }
       java.util.List<ImageSensor> examples = ImageSensor.loadExamples(dataDir.getAbsolutePath());
-      ArrayList<ImageSensor> examplesArrayList = new ArrayList<ImageSensor>(examples);
+      ArrayList<ImageSensor> examplesArrayList = new ArrayList<ImageSensor>();
+      for(int i = 0;i<examples.size(); i++){
+        examplesArrayList.add(examples.get(i));
+      }
       int numInputSensors = sensorWidth * sensorHeight;
       int numHiddenNeurons = 5;
       double learningRate = 0.1;

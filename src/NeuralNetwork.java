@@ -69,7 +69,7 @@ public class NeuralNetwork{
                 
                 pushDownstream(nodeArray, data, lineNum);
                 
-                ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, lineNum, nodeArray);
+                ReturnAnalysis selfAnal = selfAnalysis(epochs, sum, count, data, lineNum, nodeArray);
                 count = selfAnal.getCount();
                 sum = selfAnal.getSum();
                 //System.out.println(sum);
@@ -110,7 +110,7 @@ public class NeuralNetwork{
             pushDownstream(nodeArray, data, l);
             
             selfAnalysis(epochs, sum, count, data, l, nodeArray);
-            ReturnAnal selfAnal = selfAnalysis(epochs, sum, count, data, l, nodeArray);
+            ReturnAnalysis selfAnal = selfAnalysis(epochs, sum, count, data, l, nodeArray);
             category = selfAnal.brightestNode.category;
             count = selfAnal.count;
             sum = selfAnal.sum;
@@ -156,7 +156,7 @@ public class NeuralNetwork{
         }
     }
     //Analyses chosen answer neuron's result and prints 'Yay' if the network chose correct; also increments sum and count
-    public static ReturnAnal selfAnalysis(double epochs, double sum, double count, ArrayList<Input> data, int l, Node[][] nodeArray){
+    public static ReturnAnalysis selfAnalysis(double epochs, double sum, double count, ArrayList<Input> data, int l, Node[][] nodeArray){
         Node brightestNode = nodeArray[ANSWER][largestNode(nodeArray)];
         double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
         
@@ -176,7 +176,7 @@ public class NeuralNetwork{
             sum++;
         }
         count++;
-        ReturnAnal analData = new ReturnAnal(count, sum, brightestNode, brightness);
+        ReturnAnalysis analData = new ReturnAnalysis(count, sum, brightestNode, brightness);
         return analData;
     }
     //Adjusts the weights of all the hidden neurons in a network

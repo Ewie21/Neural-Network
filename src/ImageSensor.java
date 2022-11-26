@@ -18,7 +18,7 @@ class ImageSensor extends Input
   private static int numCategories = 0;
  
   private static ArrayList<Double> inputs;
-  private int category = -1;
+  private static int Category = -1;
 
   public ArrayList<Double> getInputs(){
     return this.inputs;
@@ -28,22 +28,9 @@ class ImageSensor extends Input
     return categoryNames;
   }
  
-  ImageSensor(BufferedImage image, String categoryName)
+  ImageSensor(ArrayList<Double> inputs, String categoryName)
   {
     super(inputs, categoryName);
-    if (categoryName != null)
-      category = categoryNumbers.get(categoryName);
-    int width = image.getWidth();
-    int height = image.getHeight();
-    inputs = new ArrayList<>(width*height);
-    for (int x=0; x<width; x++) {
-      for (int y=0; y<height; y++) {
-        int rgb = image.getRGB(x, y);
-        Color color = new Color(rgb);
-        int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
-        inputs.set(y*width+x, gray/255.0);
-      }
-    }
   }
  
   static int getNumCategories()
@@ -69,7 +56,7 @@ class ImageSensor extends Input
  
   public double getOutputValue(int outputNumber)
   {
-    if (outputNumber == category)
+    if (outputNumber == Category)
       return 1.0;
     else
       return 0.0;
@@ -102,7 +89,23 @@ class ImageSensor extends Input
      
       try {
         BufferedImage image = ImageIO.read(new File(cookedDir, imageName));
-        ImageSensor example = new ImageSensor(image, category);
+        //elo
+        if (imageName != null)
+          Category = categoryNumbers.get(imageName);
+        int width = image.getWidth();
+        int height = image.getHeight();
+        inputs = new ArrayList<>(width*height);
+        for (int x=0; x<width; x++) {
+          for (int y=0; y<height; y++) {
+            int rgb = image.getRGB(x, y);
+            Color color = new Color(rgb);
+            int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+            inputs.set(y*width+x, gray/255.0);
+          }
+        }
+        //
+        
+        ImageSensor example = new ImageSensor(inputs, category);
         examples.add(example);
       }
       catch (IOException ioe) {
