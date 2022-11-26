@@ -189,7 +189,21 @@ class ImageLearner
       }
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
-      ImageSensor example = new ImageSensor(image, null);
+      //elo
+
+      int width = image.getWidth();
+      int height = image.getHeight();
+      ArrayList<Double> inputsSensor = new ArrayList<>(width*height);
+      for (int x=0; x<width; x++) {
+        for (int y=0; y<height; y++) {
+          int rgb = image.getRGB(x, y);
+          Color color = new Color(rgb);
+          int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+          inputsSensor.set(y*width+x, gray/255.0);
+        }
+      }
+    //
+      ImageSensor example = new ImageSensor(inputsSensor, null);
       ArrayList<Input> examples = new ArrayList<Input>();
       examples.add(example);
       String modelName = "";

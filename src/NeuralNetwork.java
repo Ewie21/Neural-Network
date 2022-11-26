@@ -49,7 +49,7 @@ public class NeuralNetwork{
         }
     }
     //Trains the network
-    public static String learn(Node[][] nodeArray, ArrayList<Input> data, String[] categories, double learningRate){
+    public static <T extends Input>String learn(Node[][] nodeArray, ArrayList<T> data, String[] categories, double learningRate){
         int epochs = 0;
         double sum = 0;
         double count = 0;
@@ -90,7 +90,7 @@ public class NeuralNetwork{
         return name;
     }
     //Tests a model on a dataset
-    public static String test(ArrayList<Input> data, String[] categories, String modelName){
+    public static <T extends Input> String test(ArrayList<T> data, String[] categories, String modelName){
         int epochs = 0;
         double sum = 0;
         double count = 0;
@@ -126,7 +126,7 @@ public class NeuralNetwork{
         }
     }
     //Assigns correct answers to each answer neuron by checking their category against the given answer
-    public static void assignAnswers(ArrayList<Input> data, int l, Node[][] nodeArray, int ANSWER){
+    public static <T extends Input> void assignAnswers(ArrayList<T> data, int l, Node[][] nodeArray, int ANSWER){
         for(int node = 0; node<nodeArray[ANSWER].length;node++){
             if(nodeArray[ANSWER][node].category.equals(data.get(l).answer)){
                 nodeArray[ANSWER][node].correctAnswer = 1;
@@ -136,7 +136,7 @@ public class NeuralNetwork{
         }
     }
     //Passes in data to to the sensors, pushs data 'downstream' through the network
-    public static void pushDownstream(Node[][] nodeArray, ArrayList<Input> data, int l){
+    public static <T extends Input> void pushDownstream(Node[][] nodeArray, ArrayList<T> data, int l){
         //passes in data for input layer
         for(int i = 0; i<nodeArray[INPUT].length; i++){//i = current input index
             double input = data.get(l).inputs.get(i);
@@ -156,7 +156,7 @@ public class NeuralNetwork{
         }
     }
     //Analyses chosen answer neuron's result and prints 'Yay' if the network chose correct; also increments sum and count
-    public static ReturnAnalysis selfAnalysis(double epochs, double sum, double count, ArrayList<Input> data, int l, Node[][] nodeArray){
+    public static <T extends Input> ReturnAnalysis selfAnalysis(double epochs, double sum, double count, ArrayList<T> data, int l, Node[][] nodeArray){
         Node brightestNode = nodeArray[ANSWER][largestNode(nodeArray)];
         double brightness = brightestNode.cachedOutput; //strength of the answer the network is giving us
         
