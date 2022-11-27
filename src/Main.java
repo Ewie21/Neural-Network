@@ -10,7 +10,7 @@ public class Main{
     static int ANSWER;
     public static void main(String[] args){
         //trainDigits(.05);
-        //testDigits("/models/modelbest.ser"); 
+        //testDigits("./models/modelbest.ser"); 
         ImageLearner.main(args);;
     }
     //Creates the network 

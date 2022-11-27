@@ -92,7 +92,6 @@ class ImageSensor extends Input
         BufferedImage image = ImageIO.read(new File(cookedDir, imageName));
         //elo
         if (imageName != null){
-
           //Category = categoryNumbers.get(category);
           Category = categoryNumbers.get(category);
         }
@@ -112,8 +111,6 @@ class ImageSensor extends Input
             int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
             if(Main.DEBUG) System.out.println(y*width+x);
             if(Main.DEBUG) System.out.println(inputs.size());
-            //inputs.size() == 0 why is that a problem?
-            //one issue could be inputs.set() only works when there is an existing value at the given index
             inputs.set(y*width+x, gray/255.0);
           }
         }

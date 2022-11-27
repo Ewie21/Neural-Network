@@ -58,7 +58,7 @@ public class NeuralNetwork{
 
         categorize(categories, nodeArray);
 
-        while(errPercentage<99.99){ //read file in another function
+        while(errPercentage<99.00){ //read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
@@ -114,6 +114,7 @@ public class NeuralNetwork{
             category = selfAnal.brightestNode.category;
             count = selfAnal.count;
             sum = selfAnal.sum;
+            System.out.println(data.get(l).answer);
         }
         double errPercentage = sum/count*100;
         System.out.printf("Testing: Finished with an accuracy of %f/%f or %f percent after %d epochs \n", sum, count, errPercentage, epochs);
@@ -230,7 +231,7 @@ public class NeuralNetwork{
     public static String writeModel(Node[][] nodeArray){
         try{
             int fileNum = Main.random.random.nextInt();
-            String name = String.format("/models/model%d.ser", fileNum);
+            String name = String.format("./models/model%d.ser", fileNum);
             File file = new File(name);
             if(file.createNewFile()){
                 FileOutputStream fileModel = new FileOutputStream(name);
@@ -242,7 +243,8 @@ public class NeuralNetwork{
                 return name;
             }else{
                 System.out.println("Houston, this file already exists");
-                return writeModel(nodeArray);
+                //return writeModel(nodeArray);
+                return "";
             }
             
         }catch(IOException e){

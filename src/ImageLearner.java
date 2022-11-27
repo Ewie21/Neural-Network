@@ -18,7 +18,7 @@ import javax.imageio.*;
 class ImageLearner
 {
   final String[] categories = new String[] {
-   "Daeja", "Tia", "Elo"
+   "Not Elo", "Elo"
   };
   
   static final int cameraCropLeftX = 200;
@@ -33,8 +33,10 @@ class ImageLearner
 
   JFrame controlFrame;
   JLabel dirLabel;
+  JLabel modelLabel = new JLabel("");
   JLabel categoryLabel;
   File dataDir = null;
+  File modelDir;
   File rawDir = null;
   WebcamViewer videoCapture = null;
   SimpleFile indexFile = null;
@@ -51,6 +53,7 @@ class ImageLearner
     controls.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
     controls.add(selectDirButton);
     controls.add(dirLabel);
+    controls.add(modelLabel);
     controls.add(Box.createVerticalStrut(50));
     
     for (String category : categories) {
@@ -59,6 +62,11 @@ class ImageLearner
       controls.add(button);
       controls.add(Box.createVerticalStrut(10));
     }
+  
+    controls.add(Box.createVerticalStrut(40));
+    JButton modelButton = new JButton("Select Model");
+    modelButton.addActionListener(new SelectModelListener());
+    controls.add(modelButton);
     
     controls.add(Box.createVerticalStrut(40));
     JButton convertButton = new JButton("Convert Images");
@@ -94,12 +102,28 @@ class ImageLearner
     controlFrame.toFront();
     videoCapture.toFront();
   }
-  
+
+  class SelectModelListener implements ActionListener
+  {
+    public void actionPerformed(ActionEvent event)
+    {
+      JFileChooser chooser = new JFileChooser("./models");
+      chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+      int result = chooser.showOpenDialog(controlFrame);
+      if(result == JFileChooser.APPROVE_OPTION){
+        modelDir = chooser.getSelectedFile();
+        System.out.println("Selected Model: " + modelDir.getAbsolutePath());
+        modelLabel.setText(modelDir.getName()); 
+      }
+    }
+  }
+
+
   class SelectDirListener implements ActionListener
   {
     public void actionPerformed(ActionEvent event)
     {
-      JFileChooser chooser = new JFileChooser();
+      JFileChooser chooser = new JFileChooser("./");
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       int result = chooser.showOpenDialog(controlFrame);
       if (result == JFileChooser.APPROVE_OPTION) {
@@ -175,7 +199,6 @@ class ImageLearner
       double learningRate = 0.1;
       Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, categories.length, 1, Main.random).getnodeArray();
       NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
-      NeuralNetwork.writeModel(net);
     }
   }
   
@@ -186,6 +209,9 @@ class ImageLearner
       if (dataDir == null) {
         JOptionPane.showMessageDialog(controlFrame, "You must select a directory first.", "Error", JOptionPane.ERROR_MESSAGE);
         return;
+      }
+      if(modelDir == null){
+        JOptionPane.showMessageDialog(controlFrame, "You must select a model first.", "Error", JOptionPane.ERROR_MESSAGE);
       }
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
@@ -205,10 +231,10 @@ class ImageLearner
         }
       }
     //
-      ImageSensor example = new ImageSensor(inputsSensor, null);
+      ImageSensor example = new ImageSensor(inputsSensor, "Not Elo");
       ArrayList<Input> examples = new ArrayList<Input>();
       examples.add(example);
-      String modelName = "";
+      String modelName = "./models/" + modelDir.getName();
       String categoryName = NeuralNetwork.test(examples, categories, modelName);
       //tests the network on one example
       //String categoryName = ImageSensor.getCategoryName(category);
