@@ -81,7 +81,7 @@ class ImageSensor extends Input
       //System.out.println("reading " + name);
       if (! categoryNumbers.containsKey(category)) {//this conditional is triggering 
         //System.out.println("Category " + category + " is number " + numCategories);
-        System.out.println("made it");
+        if(Main.DEBUG) System.out.println("made it");
         categoryNumbers.put(category, numCategories);
         categoryNames[numCategories] = category;
         numCategories++;
@@ -92,16 +92,28 @@ class ImageSensor extends Input
         BufferedImage image = ImageIO.read(new File(cookedDir, imageName));
         //elo
         if (imageName != null){
-          Category = categoryNumbers.get(imageName);
+
+          //Category = categoryNumbers.get(category);
+          Category = categoryNumbers.get(category);
         }
         int width = image.getWidth();
         int height = image.getHeight();
         inputs = new ArrayList<>(width*height);
+        if(Main.DEBUG) System.out.println(width);
+        if(Main.DEBUG) System.out.println(height);
+        if(Main.DEBUG) System.out.println(width*height);
+        for(int i = 0; i<width*height; i++){
+          inputs.add(0.00);
+        }
         for (int x=0; x<width; x++) {
           for (int y=0; y<height; y++) {
             int rgb = image.getRGB(x, y);
             Color color = new Color(rgb);
             int gray = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+            if(Main.DEBUG) System.out.println(y*width+x);
+            if(Main.DEBUG) System.out.println(inputs.size());
+            //inputs.size() == 0 why is that a problem?
+            //one issue could be inputs.set() only works when there is an existing value at the given index
             inputs.set(y*width+x, gray/255.0);
           }
         }

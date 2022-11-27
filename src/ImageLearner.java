@@ -173,7 +173,7 @@ class ImageLearner
       int numInputSensors = sensorWidth * sensorHeight;
       int numHiddenNeurons = 5;
       double learningRate = 0.1;
-      Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, ImageSensor.getNumCategories(), 1, Main.random).getnodeArray();
+      Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, categories.length, 1, Main.random).getnodeArray();
       NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
       NeuralNetwork.writeModel(net);
     }
@@ -193,6 +193,9 @@ class ImageLearner
       int width = image.getWidth();
       int height = image.getHeight();
       ArrayList<Double> inputsSensor = new ArrayList<>(width*height);
+      for(int i = 0; i<width*height;i++){
+        inputsSensor.add(0.00);
+      }
       for (int x=0; x<width; x++) {
         for (int y=0; y<height; y++) {
           int rgb = image.getRGB(x, y);

@@ -122,6 +122,8 @@ public class NeuralNetwork{
     //Assigns categories to each answer neuron
     public static void categorize(String[] categories, Node[][] nodeArray){
         for(int i = 0; i<categories.length; i++){
+            if(Main.DEBUG) System.out.println(nodeArray[ANSWER].length);
+            if(Main.DEBUG) System.out.println(categories.length);
             nodeArray[ANSWER][i].category = categories[i];
         }
     }
