@@ -195,8 +195,8 @@ class ImageLearner
         examplesArrayList.add(examples.get(i));
       }
       int numInputSensors = sensorWidth * sensorHeight;
-      int numHiddenNeurons = 5;
-      double learningRate = 0.1;
+      int numHiddenNeurons = 128;
+      double learningRate = 0.5;
       Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, categories.length, 1, Main.random).getnodeArray();
       NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
     }
@@ -213,6 +213,7 @@ class ImageLearner
       if(modelDir == null){
         JOptionPane.showMessageDialog(controlFrame, "You must select a model first.", "Error", JOptionPane.ERROR_MESSAGE);
       }
+      //how are we supposed to know the category to check if the answer is correct, if we don't know the right answer
       BufferedImage image = videoCapture.getImage();
       image = cookImage(image);
       //elo
@@ -231,7 +232,7 @@ class ImageLearner
         }
       }
     //
-      ImageSensor example = new ImageSensor(inputsSensor, "Not Elo");
+      ImageSensor example = new ImageSensor(inputsSensor, "Elo");
       ArrayList<Input> examples = new ArrayList<Input>();
       examples.add(example);
       String modelName = "./models/" + modelDir.getName();
