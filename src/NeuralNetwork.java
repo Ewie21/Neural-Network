@@ -13,7 +13,7 @@ public class NeuralNetwork{
         INPUT = 0;
         ANSWER = 1+hiddenLayers;
 
-        nodeArray = new Node[hiddenLayers+2][];
+        nodeArray = new Node[hiddenLayers+2][];   
         //an array of array lists
         //initialize input sub array
         nodeArray[INPUT] = new Node[inputNum];
