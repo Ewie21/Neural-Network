@@ -1,6 +1,5 @@
 package src;
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -195,7 +194,7 @@ class ImageLearner
         examplesArrayList.add(examples.get(i));
       }
       int numInputSensors = sensorWidth * sensorHeight;
-      int numHiddenNeurons = 128;
+      int numHiddenNeurons = 600;
       double learningRate = 0.5;
       Node[][] net = new NeuralNetwork(numInputSensors, numHiddenNeurons, categories.length, 1, Main.random).getnodeArray();
       NeuralNetwork.learn(net, examplesArrayList, categories, learningRate);
@@ -232,7 +231,7 @@ class ImageLearner
         }
       }
     //
-      ImageSensor example = new ImageSensor(inputsSensor, "Elo");
+      ImageSensor example = new ImageSensor(inputsSensor, null);
       ArrayList<Input> examples = new ArrayList<Input>();
       examples.add(example);
       String modelName = "./models/" + modelDir.getName();
