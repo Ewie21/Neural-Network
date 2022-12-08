@@ -78,9 +78,9 @@ public class NeuralNetwork{
             }
             double oldErrPercentage = errPercentage;
             errPercentage = (sum/count)*100;
-            System.out.println(errPercentage);
             epochs++;
             System.out.println(epochs);
+            System.out.println(errPercentage);
             if(errPercentage - oldErrPercentage <0.0001){
                 break;
             }
