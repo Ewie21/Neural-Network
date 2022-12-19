@@ -58,12 +58,12 @@ public class NeuralNetwork{
 
         categorize(categories, nodeArray);
 
-        while(errPercentage<99.00){ //read file in another function
+        while(errPercentage<99.00){ //Read file in another function
             count = 0;
             sum = 0;
             errPercentage = 0;
 
-            for(int lineNum = 0; lineNum<data.size(); lineNum++){ //iterates through training examples
+            for(int lineNum = 0; lineNum<data.size(); lineNum++){ //Iterates through training examples
                 if(Main.DEBUG) System.out.println("training checkpoint one passed");
                 assignAnswers(data, lineNum, nodeArray, ANSWER);
                 
@@ -218,7 +218,7 @@ public class NeuralNetwork{
         for(int answer = 0; answer<nodeArray[ANSWER].length;answer++){
             if(Main.DEBUG) System.out.println("Layer: "+ ANSWER);
             if(Main.DEBUG) System.out.println("Node: " + answer);
-            nodeArray[ANSWER][answer].computeAnswerErrSignal();//errSig for answer neurons 
+            nodeArray[ANSWER][answer].computeAnswerErrSignal(); 
             if(Main.DEBUG) System.out.println("Error: " + nodeArray[ANSWER][answer].errSig);
         }
         adjustHiddenWeights(nodeArray, learningRate, hiddenLayers);
@@ -243,7 +243,6 @@ public class NeuralNetwork{
                 return name;
             }else{
                 System.out.println("Houston, this file already exists");
-                //return writeModel(nodeArray);
                 return "";
             }
             

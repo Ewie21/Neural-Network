@@ -36,8 +36,8 @@ public class Node implements Serializable{
     public void computeAnswerErrSignal(){
         if(Main.DEBUG) System.out.println(errSig);
         this.errSig = (this.correctAnswer - cachedOutput)*(cachedOutput)*(1-cachedOutput);
-        //these last two terms are the derivative of the sigmoid function.
-        //this is important to us because it makes the errsig higher the closer our output is to 1, making it choose a side(-,+).
+        //These last two terms are the derivative of the sigmoid function.
+        //This is important to us because it makes the errsig higher the closer our output is to 1, making it choose a side(-,+).
         if(Main.DEBUG) System.out.println(errSig);
     }
     //Adjusts the weights of a neuron
